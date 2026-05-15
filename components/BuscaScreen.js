@@ -12,7 +12,7 @@ import {
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../context/AuthContext';
 
-// Formata "2026-06-11" → "11/06/2026"
+
 const formatDate = (str) => {
   if (!str) return '';
   const [y, m, d] = str.split('-');
@@ -27,7 +27,7 @@ export default function BuscaScreen() {
   const [historico, setHistorico] = useState([]);
   const [showHistorico, setShowHistorico] = useState(false);
 
-  // Carrega histórico do usuário
+  
   const carregarHistorico = useCallback(async () => {
     const { data, error } = await supabase
       .from('historico_buscas')
@@ -61,7 +61,7 @@ export default function BuscaScreen() {
     setLoading(true);
     setShowHistorico(false);
 
-    // Mapeia nomes de meses em PT para número
+    
     const mesesMap = {
       janeiro: '01', fevereiro: '02', março: '03', marco: '03',
       abril: '04', maio: '05', junho: '06', julho: '07',
@@ -71,11 +71,11 @@ export default function BuscaScreen() {
 
     let filtroMes = mesesMap[termo.toLowerCase()];
     if (!filtroMes) {
-      // Tenta número direto (ex: "06" ou "6")
+      
       filtroMes = termo.padStart(2, '0');
     }
 
-    // Busca jogos onde data_brasilia contém o mês
+    
     const { data, error } = await supabase
       .from('jogos_copa')
       .select('*')
@@ -133,7 +133,7 @@ export default function BuscaScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Barra de busca */}
+      {}
       <View style={styles.searchRow}>
         <TextInput
           style={styles.input}
@@ -150,7 +150,7 @@ export default function BuscaScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Dropdown de histórico */}
+      {}
       {showHistorico && historico.length > 0 && (
         <View style={styles.historicoBox}>
           <Text style={styles.historicoTitle}>Buscas recentes</Text>
@@ -163,7 +163,7 @@ export default function BuscaScreen() {
         </View>
       )}
 
-      {/* Resultados */}
+      {}
       {loading ? (
         <ActivityIndicator color="#FFD700" size="large" style={{ marginTop: 40 }} />
       ) : (

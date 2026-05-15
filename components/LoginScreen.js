@@ -77,7 +77,7 @@ export default function LoginScreen() {
     limparErros();
     let temErro = false;
 
-    // Validação de e-mail
+    
     if (!email.trim()) {
       setErroEmail('Informe seu e-mail.');
       temErro = true;
@@ -86,7 +86,7 @@ export default function LoginScreen() {
       temErro = true;
     }
 
-    // Validação de senha
+    
     if (!password) {
       setErroSenha('Informe sua senha.');
       temErro = true;
@@ -143,7 +143,7 @@ export default function LoginScreen() {
     setLoading(false);
   };
 
-  // ── Tela de aguardando confirmação ──────────────────────────────────────────
+  
   if (aguardandoConfirmacao) {
     return (
       <View style={styles.container}>
@@ -179,7 +179,7 @@ export default function LoginScreen() {
     );
   }
 
-  // ── Tela de login / cadastro ─────────────────────────────────────────────────
+  
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -193,7 +193,7 @@ export default function LoginScreen() {
 
         <View style={styles.card}>
 
-          {/* Erro geral (e-mail/senha errados) */}
+          {}
           {erroGeral ? (
             <View style={styles.alertBox}>
               <Text style={styles.alertIcon}>⚠️</Text>
@@ -201,7 +201,7 @@ export default function LoginScreen() {
             </View>
           ) : null}
 
-          {/* Campo e-mail */}
+          {}
           <Text style={styles.label}>E-mail</Text>
           <TextInput
             style={[styles.input, erroEmail ? styles.inputErro : null]}
@@ -214,7 +214,7 @@ export default function LoginScreen() {
           />
           {erroEmail ? <Text style={styles.erroTexto}>⚠ {erroEmail}</Text> : null}
 
-          {/* Campo senha */}
+          {}
           <Text style={styles.label}>Senha</Text>
           <TextInput
             style={[styles.input, erroSenha ? styles.inputErro : null]}
@@ -225,7 +225,7 @@ export default function LoginScreen() {
             secureTextEntry
           />
 
-          {/* Requisitos de senha no cadastro */}
+          {}
           {!isLogin && (
             <>
               <ForcaSenha senha={password} />
