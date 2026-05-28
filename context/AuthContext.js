@@ -1,3 +1,11 @@
+/**
+ * AuthContext.js
+ * 
+ * Atualizado para passar `options` no signUp (necessário para salvar username
+ * nos user_metadata do Supabase).
+ * 
+ * Coloque em: context/AuthContext.js
+ */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 
@@ -8,13 +16,13 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
+    // Sessão atual
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    
+    // Ouvir mudanças de sessão
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
@@ -22,22 +30,17 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    return { data, error };
-  };
+  const signIn = (email, password) =>
+    supabase.auth.signInWithPassword({ email, password });
 
-  const signIn = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    return { data, error };
-  };
+  // options pode conter { data: { username: '...' } }
+  const signUp = (email, password, options = {}) =>
+    supabase.auth.signUp({ email, password, ...options });
 
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
+  const signOut = () => supabase.auth.signOut();
 
   return (
-    <AuthContext.Provider value={{ user, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );
