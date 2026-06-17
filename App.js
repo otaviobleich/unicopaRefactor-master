@@ -1,3 +1,4 @@
+import 'react-native-url-polyfill/auto'; // ← DEVE SER A PRIMEIRA LINHA
 import React from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';

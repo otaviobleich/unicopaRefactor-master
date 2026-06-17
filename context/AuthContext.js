@@ -1,10 +1,8 @@
 /**
- * AuthContext.js
- * 
- * Atualizado para passar `options` no signUp (necessário para salvar username
- * nos user_metadata do Supabase).
- * 
- * Coloque em: context/AuthContext.js
+ * context/AuthContext.js
+ *
+ * Sem alterações na lógica — o fix está em utils/supabase.js e index.js.
+ * Mantido aqui completo para referência.
  */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
@@ -12,7 +10,7 @@ import { supabase } from '../utils/supabase';
 const AuthContext = createContext({});
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser]       = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

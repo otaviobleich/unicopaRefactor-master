@@ -1,0 +1,118 @@
+name: Build Pipeline
+
+# Dispara a pipeline a cada push na branch main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # ────────────────────────────────────────────────────────────
+  # 1) Validação: instala dependências e checa a saúde do projeto
+  # ────────────────────────────────────────────────────────────
+  validate:
+    name: Validar projeto
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar saúde do projeto Expo
+        run: npx expo-doctor
+
+  # ────────────────────────────────────────────────────────────
+  # 2) Build Android (via EAS Build, na nuvem da Expo)
+  # ────────────────────────────────────────────────────────────
+  build-android:
+    name: Build Android
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Configurar EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Disparar build Android no EAS
+        run: eas build --platform android --profile production --non-interactive --no-wait
+
+  # ────────────────────────────────────────────────────────────
+  # 3) Build iOS (via EAS Build, na nuvem da Expo)
+  # ────────────────────────────────────────────────────────────
+  build-ios:
+    name: Build iOS
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Configurar EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Disparar build iOS no EAS
+        run: eas build --platform ios --profile production --non-interactive --no-wait
+
+  # ────────────────────────────────────────────────────────────
+  # 4) Build Web (gerado localmente no runner, sem precisar do EAS)
+  # ────────────────────────────────────────────────────────────
+  build-web:
+    name: Build Web
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Gerar build estático para Web
+        run: npx expo export -p web
+
+      - name: Publicar artefato do build Web
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: dist/
+          retention-days: 14
